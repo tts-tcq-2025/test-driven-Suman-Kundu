@@ -1,88 +1,56 @@
 #include <iostream>
 #include <cassert>
-#include<string>
+#include <string>
 #include "StringCalculator.h"
 
-int main() {
-    StringCalculator Calculator;
-    int result = -1;
-    
-   /* Basic Functionality Testing*/
-    std::cout << "Testing empty string..." << std::endl;
-    result = Calculator.Add("");
+// Helper function to test operations
+void testOperation(StringCalculator& calculator, const std::string& testName,
+                   const std::string& input, int expected) {
+    std::cout << "Testing " << testName << "..." << std::endl;
+    int result = calculator.Add(input);
     std::cout << "Result: " << result << std::endl;
-    assert(result == 0);
-    std::cout << "✓ Empty string test passed!" << std::endl;
-    
-    std::cout << "Testing Single number..." << std::endl;
-    result = Calculator.Add("1");
-    std::cout << "Result: " << result << std::endl;
-    assert(result == 1);
-    std::cout << "✓ Single number test passed!" << std::endl;
-    
-    std::cout << "Testing two numbers..." << std::endl;
-    result = Calculator.Add("1,2");
-    std::cout << "Result: " << result << std::endl;
-    assert(result == 3);
-    std::cout << "✓ Single number test passed!" << std::endl;
-    
-   
-   /* Extended input testing */
-    std::cout << "Testing three numbers..." << std::endl;
-    result = Calculator.Add("1,2,3");
-    std::cout << "Result: " << result << std::endl;
-    assert(result == 6);
-    std::cout << "✓ Three numbers test passed!" << std::endl;
+    assert(result == expected);
+    std::cout << "✓ " << testName << " test passed!" << std::endl;
+}
 
-    std::cout << "Testing five numbers..." << std::endl;
-    result = Calculator.Add("1,2,3,4,5");
-    std::cout << "Result: " << result << std::endl;
-    assert(result == 15);
-    std::cout << "✓ Five numbers test passed!" << std::endl;
-
-    std::cout << "Testing New Line as Delimiter..." << std::endl;
-    result = Calculator.Add("1\n2,3");
-    std::cout << "Result: " << result << std::endl;
-    assert(result == 6);
-    std::cout << "✓ New Line as Delimiter test passed!" << std::endl;
-
-    std::cout << "Testing Invalid format Clarification..." << std::endl;
-    result = Calculator.Add("1,\n");
-    std::cout << "Result: " << result << std::endl;
-    assert(result == 1);
-    std::cout << "✓ Invalid format Clarification test passed!" << std::endl;
-
-    /* Custom Delimiters Testing */
-    std::cout << "Testing Single-character custom delimiter..." << std::endl;
-    result = Calculator.Add("//;\n1;2");
-    std::cout << "Result: " << result << std::endl;
-    assert(result == 3);
-    std::cout << "✓ Single-character Custom delimiter test passed!" << std::endl;
-
-    std::cout << "Testing Multi-character custom delimiter..." << std::endl;
-    result = Calculator.Add("//[***]\n1***2***3");
-    std::cout << "Result: " << result << std::endl;
-    assert(result == 6);
-    std::cout << "✓ Multi-character Custom delimiter test passed!" << std::endl;
-
-
-    /*Negative Testing */
-    std::cout << "Testing negative numbers..." << std::endl;
+// Helper function to test exception cases
+void testException(StringCalculator& calculator, const std::string& testName,
+                   const std::string& input, const std::string& expectedMessage) {
+    std::cout << "Testing " << testName << "..." << std::endl;
     try {
-        result = Calculator.Add("1,-2,-3");
+        calculator.Add(input);
+        assert(false);  // Should not reach here
     } catch (const std::invalid_argument& e) {
         std::cout << "Result: " << e.what() << std::endl;
-        assert(std::string(e.what()) == "Negative numbers are not allowed: -2 -3");
+        assert(std::string(e.what()) == expectedMessage);
     }
-    std::cout << "✓ Negative numbers test passed!" << std::endl;
+    std::cout << "✓ " << testName << " test passed!" << std::endl;
+}
 
+int main() {
+    StringCalculator calculator;
 
-    /*Large Numbers Testing */
-    std::cout << "Testing large numbers..." << std::endl;
-    result = Calculator.Add("2,1001");
-    std::cout << "Result: " << result << std::endl;
-    assert(result == 2);
-    std::cout << "✓ Large numbers test passed!" << std::endl;
+    /* Basic Functionality Testing */
+    testOperation(calculator, "empty string", "", 0);
+    testOperation(calculator, "Single number", "1", 1);
+    testOperation(calculator, "two numbers", "1,2", 3);
+
+    /* Extended input testing */
+    testOperation(calculator, "three numbers", "1,2,3", 6);
+    testOperation(calculator, "five numbers", "1,2,3,4,5", 15);
+    testOperation(calculator, "New Line as Delimiter", "1\n2,3", 6);
+    testOperation(calculator, "Invalid format Clarification", "1,\n", 1);
+
+    /* Custom Delimiters Testing */
+    testOperation(calculator, "Single-character custom delimiter", "//;\n1;2", 3);
+    testOperation(calculator, "Multi-character custom delimiter", "//[***]\n1***2***3", 6);
+
+    /* Negative Testing */
+    testException(calculator, "negative numbers", "1,-2,-3",
+                  "Negative numbers are not allowed: -2 -3");
+
+    /* Large Numbers Testing */
+    testOperation(calculator, "large numbers", "2,1001", 2);
 
     return 0;
 }

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef NUMBERPROCESSOR_H_
+#define NUMBERPROCESSOR_H_
+
 #include <string>
 #include <vector>
 
@@ -17,3 +19,5 @@ class NumberProcessor {
     static std::vector<int> findNegatives(const std::vector<int>& numbers);
     static void throwNegativeException(const std::vector<int>& negatives);
 };
+
+#endif  // NUMBERPROCESSOR_H_

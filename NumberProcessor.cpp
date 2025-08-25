@@ -26,33 +26,46 @@ std::vector<std::string> NumberProcessor::split(const std::string& text, const s
             tokens.push_back(text.substr(start));
             break;
         }
-        
-        if (end > start) {
-            tokens.push_back(text.substr(start, end - start));
-        }
+        addToken(tokens, text, start, end);
         start = end + 1;
     }
     
     return tokens;
 }
 
-// Validate numbers for negative values
+// Add token if valid 
+void NumberProcessor::addToken(std::vector<std::string>& tokens, const std::string& text, size_t start, size_t end) {
+    if (end > start) {
+        tokens.push_back(text.substr(start, end - start));
+    }
+}
+
+// Validate numbers for negative values 
 void NumberProcessor::validateNumbers(const std::vector<int>& numbers) {
+    auto negatives = findNegatives(numbers);
+    if (!negatives.empty()) {
+        throwNegativeException(negatives);
+    }
+}
+
+// Find negative numbers 
+std::vector<int> NumberProcessor::findNegatives(const std::vector<int>& numbers) {
     std::vector<int> negatives;
-    
     for (int num : numbers) {
         if (num < 0) {
             negatives.push_back(num);
         }
     }
-    
-    if (!negatives.empty()) {
-        std::string message = "Negative numbers are not allowed:";
-        for (int neg : negatives) {
-            message += " " + std::to_string(neg);
-        }
-        throw std::invalid_argument(message);
+    return negatives;
+}
+
+// Throw exception with negative numbers 
+void NumberProcessor::throwNegativeException(const std::vector<int>& negatives) {
+    std::string message = "Negative numbers are not allowed:";
+    for (int neg : negatives) {
+        message += " " + std::to_string(neg);
     }
+    throw std::invalid_argument(message);
 }
 
 // Sum valid numbers (ignore > 1000) 

@@ -11,12 +11,14 @@ std::string DelimiterParser::extractCustomDelimiter(const std::string& numbers) 
     if (newlinePos == std::string::npos) return ",";
     
     std::string delimiterPart = numbers.substr(2, newlinePos - 2);
-    
-    // Handle multi-character delimiters: [***]
+    return parseMultiCharDelimiter(delimiterPart);
+}
+
+// Parse multi-character delimiter 
+std::string DelimiterParser::parseMultiCharDelimiter(const std::string& delimiterPart) {
     if (delimiterPart.front() == '[' && delimiterPart.back() == ']') {
         return delimiterPart.substr(1, delimiterPart.length() - 2);
     }
-    
     return delimiterPart;
 }
 

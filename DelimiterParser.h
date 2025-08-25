@@ -1,5 +1,4 @@
-#ifndef DELIMITERPARSER_H
-#define DELIMITERPARSER_H
+#pragma once 
 
 #include <string>
 
@@ -12,6 +11,3 @@ class DelimiterParser {
  private:
     static std::string parseMultiCharDelimiter(const std::string& delimiterPart);
 };
-
-#endif  // DELIMITERPARSER_H
-

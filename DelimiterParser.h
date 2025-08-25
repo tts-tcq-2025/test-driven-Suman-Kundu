@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <string>
 
 class DelimiterParser {
@@ -11,4 +10,3 @@ class DelimiterParser {
  private:
     static std::string parseMultiCharDelimiter(const std::string& delimiterPart);
 };
-

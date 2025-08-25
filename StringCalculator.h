@@ -2,6 +2,6 @@
 #include <string>
 
 class StringCalculator {
-public:
+ public:
     int Add(const std::string& numbers);
 };

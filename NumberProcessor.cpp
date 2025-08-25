@@ -2,6 +2,9 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <numeric>
+#include <iterator>
 
 // Parse numbers using given delimiters
 std::vector<int> NumberProcessor::parseNumbers(const std::string& numbers,
@@ -56,11 +59,8 @@ void NumberProcessor::validateNumbers(const std::vector<int>& numbers) {
 // Find negative numbers
 std::vector<int> NumberProcessor::findNegatives(const std::vector<int>& numbers) {
     std::vector<int> negatives;
-    for (int num : numbers) {
-        if (num < 0) {
-            negatives.push_back(num);
-        }
-    }
+    std::copy_if(numbers.begin(), numbers.end(), std::back_inserter(negatives),
+                 [](int num) { return num < 0; });
     return negatives;
 }
 
@@ -75,13 +75,8 @@ void NumberProcessor::throwNegativeException(const std::vector<int>& negatives) 
 
 // Sum valid numbers (ignore > 1000)
 int NumberProcessor::sumValidNumbers(const std::vector<int>& numbers) {
-    int sum = 0;
-
-    for (int num : numbers) {
-        if (num <= 1000) {
-            sum += num;
-        }
-    }
-
-    return sum;
+    return std::accumulate(numbers.begin(), numbers.end(), 0,
+                           [](int sum, int num) {
+                               return (num <= 1000) ? sum + num : sum;
+                           });
 }
